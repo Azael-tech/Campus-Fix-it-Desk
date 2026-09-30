@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ReportInProgress;
 use App\Mail\ReportResolved;
 use App\Models\MaintenanceReport;
 use Illuminate\Http\RedirectResponse;
@@ -103,7 +104,7 @@ class MaintenanceReportController extends Controller
         $report->update($data);
 
         $message = "Report {$report->reference} was updated.";
-        if ($this->notifyIfResolved($report, $previousStatus)) {
+        if ($this->notifyReporter($report, $previousStatus)) {
             $message .= ' The reporter was emailed.';
         }
 
@@ -125,7 +126,7 @@ class MaintenanceReportController extends Controller
         ]);
 
         $message = "Status changed to {$report->status_label}.";
-        if ($this->notifyIfResolved($report, $previousStatus)) {
+        if ($this->notifyReporter($report, $previousStatus)) {
             $message .= ' The reporter was emailed.';
         }
 
@@ -192,18 +193,32 @@ class MaintenanceReportController extends Controller
 
     /* ---------- Helpers ---------- */
 
-    /** Email the reporter the first time a report becomes Resolved. Returns true if sent. */
-    private function notifyIfResolved(MaintenanceReport $report, string $previousStatus): bool
+    /**
+     * Email the reporter when the status changes to In progress or Resolved.
+     * Returns true if an email was sent.
+     */
+    private function notifyReporter(MaintenanceReport $report, string $previousStatus): bool
     {
-        if ($report->status !== 'resolved' || $previousStatus === 'resolved' || ! $report->reporter_email) {
+        // No email address, or the status did not actually change: send nothing.
+        if (! $report->reporter_email || $report->status === $previousStatus) {
+            return false;
+        }
+
+        $mail = match ($report->status) {
+            'in_progress' => new ReportInProgress($report),
+            'resolved'    => new ReportResolved($report),
+            default       => null,
+        };
+
+        if ($mail === null) {
             return false;
         }
 
         try {
-            Mail::to($report->reporter_email)->send(new ReportResolved($report));
+            Mail::to($report->reporter_email)->send($mail);
             return true;
         } catch (\Throwable $e) {
-            Log::warning('Could not send the "report fixed" email: ' . $e->getMessage());
+            Log::warning('Could not send the status email: ' . $e->getMessage());
             return false;
         }
     }
