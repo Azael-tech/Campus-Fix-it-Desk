@@ -10,6 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+
 </head>
 <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -19,7 +21,7 @@
             <a class="brand" href="{{ route('reports.index') }}">
                 <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
                     <rect width="32" height="32" rx="9" fill="#ffc629"/>
-                    <path d="M9 23l2-6 9-9 4 4-9 9-6 2z" fill="#16296b"/>
+                    <path d="M9 23l2-6 9-9 4 4-9 9z" fill="#16296b"/>
                     <path d="M20 8l4 4" stroke="#ffc629" stroke-width="2"/>
                 </svg>
                 <span>Campus Fix-It Desk</span>
