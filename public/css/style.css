@@ -1,9 +1,3 @@
-/* =========================================================
-   Campus Fix-It Desk: school-friendly stylesheet
-   Idea: the home page is a notebook page; every report is
-   a hall-pass style ticket whose edge color shows its status.
-   ========================================================= */
-
 :root {
     --ink: #1b2440;
     --muted: #5d6b8a;
@@ -438,3 +432,9 @@ input[type="file"]::file-selector-button {
     background: var(--blue-soft); color: var(--blue-deep); border-radius: var(--r-field);
     padding: .6rem 1rem; font-weight: 700; margin-bottom: 1.25rem;
 }
+
+/* Center the Log in and Sign up pages */
+.form-card--narrow { width: 100%; margin-inline: auto; }
+.page-head:has(+ .form-card--narrow) { text-align: center; }
+.form-card--narrow + .alt-link { text-align: center; }
+.form-card--narrow .form-actions { justify-content: center; }
