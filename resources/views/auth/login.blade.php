@@ -26,12 +26,19 @@
 
             <div class="field">
                 <label for="password">Password</label>
-                <input id="password" name="password" type="password" required autocomplete="current-password">
+                <div class="password-wrap">
+                    <input id="password" name="password" type="password" required autocomplete="current-password">
+                    <button type="button" class="toggle-password" data-toggle-password
+                            aria-label="Show password" aria-pressed="false">Show</button>
+                </div>
             </div>
 
-            <label class="check">
-                <input type="checkbox" name="remember" value="1"> Keep me logged in on this computer
-            </label>
+            <div class="login-options">
+                <label class="check">
+                    <input type="checkbox" name="remember" value="1"> Keep me logged in
+                </label>
+                <a class="forgot-link" href="{{ route('password.request') }}">Forgot password?</a>
+            </div>
         </div>
 
         <div class="form-actions">

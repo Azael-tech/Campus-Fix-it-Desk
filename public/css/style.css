@@ -438,3 +438,35 @@ input[type="file"]::file-selector-button {
 .page-head:has(+ .form-card--narrow) { text-align: center; }
 .form-card--narrow + .alt-link { text-align: center; }
 .form-card--narrow .form-actions { justify-content: center; }
+
+/* Show / Hide password button sits inside the input */
+.password-wrap { position: relative; }
+.password-wrap input { padding-right: 4.6rem; }
+.toggle-password {
+    position: absolute; top: 50%; right: .5rem; transform: translateY(-50%);
+    font: 700 .85rem var(--font-body); color: var(--blue);
+    background: transparent; border: 0; border-radius: var(--r-pill);
+    padding: .3rem .65rem; cursor: pointer;
+}
+.toggle-password:hover { background: rgba(36, 82, 199, .1); }
+.toggle-password:focus-visible { outline: 3px solid rgba(36, 82, 199, .35); outline-offset: 1px; }
+
+/* "Keep me logged in" on the left, "Forgot password?" on the right */
+.login-options { display: flex; justify-content: space-between; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.forgot-link { font-weight: 700; color: var(--blue); }
+
+/* Green message after the reset link is sent */
+.notice {
+    background: #e6f6ec; color: #1d5c34; border: 2px solid #a8dcb9;
+    border-radius: var(--r-field); padding: .8rem 1rem; margin-bottom: 1.25rem; font-weight: 700;
+}
+
+/* Name fields on Sign up: two columns, one column on small phones */
+.name-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+@media (max-width: 420px) { .name-grid { grid-template-columns: 1fr; } }
+
+/* Dark mode */
+[data-theme="dark"] .toggle-password,
+[data-theme="dark"] .forgot-link { color: #8fb0ff; }
+[data-theme="dark"] .toggle-password:hover { background: rgba(143, 176, 255, .15); }
+[data-theme="dark"] .notice { background: #17301f; color: #a8e6bd; border-color: #2f6b45; }

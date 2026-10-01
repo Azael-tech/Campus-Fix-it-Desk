@@ -18,11 +18,49 @@
         @endif
 
         <div class="form-section">
-            <div class="field">
-                <label for="name">Full name</label>
-                <input id="name" name="name" type="text" required maxlength="100" autofocus autocomplete="name"
-                       value="{{ old('name') }}" placeholder="e.g. Maria Santos">
-                @error('name') <p class="field-error">{{ $message }}</p> @enderror
+            <div class="name-grid">
+                <div class="field">
+                    <label for="last_name">Last name</label>
+                    <input id="last_name" name="last_name" type="text" required maxlength="60" autofocus autocomplete="family-name"
+                           value="{{ old('last_name') }}" placeholder="e.g. Santos">
+                    @error('last_name') <p class="field-error">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="field">
+                    <label for="first_name">First name</label>
+                    <input id="first_name" name="first_name" type="text" required maxlength="60" autocomplete="given-name"
+                           value="{{ old('first_name') }}" placeholder="e.g. Maria">
+                    @error('first_name') <p class="field-error">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="field">
+                    <label for="middle_initial">Middle initial</label>
+                    <input id="middle_initial" name="middle_initial" type="text" maxlength="1" autocomplete="additional-name"
+                           value="{{ old('middle_initial') }}" placeholder="e.g. D" style="text-transform: uppercase;">
+                    @error('middle_initial') <p class="field-error">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="field">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="" disabled @selected(! old('gender'))>Choose one</option>
+                        @foreach ($genders as $g)
+                            <option value="{{ $g }}" @selected(old('gender') === $g)>{{ $g }}</option>
+                        @endforeach
+                    </select>
+                    @error('gender') <p class="field-error">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="field">
+                    <label for="suffix">Suffix</label>
+                    <select id="suffix" name="suffix">
+                        <option value="">None</option>
+                        @foreach ($suffixes as $s)
+                            <option value="{{ $s }}" @selected(old('suffix') === $s)>{{ $s }}</option>
+                        @endforeach
+                    </select>
+                    @error('suffix') <p class="field-error">{{ $message }}</p> @enderror
+                </div>
             </div>
 
             <div class="field">
@@ -34,14 +72,22 @@
 
             <div class="field">
                 <label for="password">Password</label>
-                <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
+                <div class="password-wrap">
+                    <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
+                    <button type="button" class="toggle-password" data-toggle-password
+                            aria-label="Show password" aria-pressed="false">Show</button>
+                </div>
                 <p class="hint">At least 8 characters.</p>
                 @error('password') <p class="field-error">{{ $message }}</p> @enderror
             </div>
 
             <div class="field">
                 <label for="password_confirmation">Type the password again</label>
-                <input id="password_confirmation" name="password_confirmation" type="password" required minlength="8" autocomplete="new-password">
+                <div class="password-wrap">
+                    <input id="password_confirmation" name="password_confirmation" type="password" required minlength="8" autocomplete="new-password">
+                    <button type="button" class="toggle-password" data-toggle-password
+                            aria-label="Show password" aria-pressed="false">Show</button>
+                </div>
             </div>
 
             <div class="field">

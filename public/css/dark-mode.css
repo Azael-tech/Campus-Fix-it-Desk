@@ -1,9 +1,4 @@
-/* =========================================================
-   Dark mode for Campus Fix-It Desk
-   Loaded AFTER style.css. Applies when <html data-theme="dark">.
-   ========================================================= */
 
-/* ---------- Toggle button (shows in both themes) ---------- */
 .theme-toggle {
     display: inline-grid; place-items: center;
     width: 40px; height: 40px; padding: 0;
