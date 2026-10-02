@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('suffix', 10)->nullable()->after('gender');
         });
 
-        DB::table('users')->whereNull('first_name')->update(['first_name' => DB::raw('name')]);
+        // Fill in the demo staff account if it already exists
+        DB::table('users')->where('email', 'staff@school.test')
+            ->update(['first_name' => 'Maintenance', 'last_name' => 'Staff']);
     }
 
     public function down(): void

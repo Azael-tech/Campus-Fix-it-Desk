@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MaintenanceReportController;
 use App\Http\Middleware\EnsureStaff;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PasswordResetController;
 
 Route::redirect('/', '/reports');
 
