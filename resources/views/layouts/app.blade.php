@@ -75,6 +75,53 @@
         </div>
     </footer>
 
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col footer-about">
+                    <h2 class="footer-title">About Us</h2>
+                    <p>Campus Fix-It Desk helps students, teachers, staff, and parents report campus problems so the maintenance team can fix them fast.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h2 class="footer-title">Support</h2>
+                    <ul class="footer-links">
+                        <li><a href="{{ route('reports.create') }}">Report a problem</a></li>
+                        <li><a href="{{ route('reports.index') }}">All reports</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h2 class="footer-title">Account</h2>
+                    <ul class="footer-links">
+                        @auth
+                            <li><a href="{{ route('reports.index', ['mine' => 1]) }}">My reports</a></li>
+                        @else
+                            <li><a href="{{ route('login') }}">Log in</a></li>
+                            <li><a href="{{ route('register') }}">Sign up</a></li>
+                            <li><a href="{{ route('password.request') }}">Forgot password</a></li>
+                        @endauth
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h2 class="footer-title">Company</h2>
+                    <ul class="footer-links">
+                        <li><a href="mailto:campusfixitdesk@gmail.com">Contact Us</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <span>&copy; {{ date('Y') }} Campus Fix-It Desk. All rights reserved.</span>
+                <span>Every report gets a reference number you can follow.</span>
+            </div>
+        </div>
+    </footer>
+
     <dialog id="confirmDialog" class="dialog">
         <h2>Delete this report?</h2>
         <p data-dialog-text>This cannot be undone.</p>

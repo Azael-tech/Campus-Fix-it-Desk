@@ -253,6 +253,13 @@ class MaintenanceReportController extends Controller
             ->first();
     }
 
+    private function deletePhoto(MaintenanceReport $report): void
+    {
+        if ($report->photo) {
+            Storage::disk('public')->delete($report->photo);
+        }
+    }
+
     private function rules(bool $withStatus = false): array
     {
         $rules = [

@@ -491,3 +491,41 @@ input[name="middle_initial"] { text-transform: uppercase; }
 @media (max-width: 720px) {
     .form-grid--3 { grid-template-columns: 1fr; }
 }
+
+/* ---------- Footer (4 columns) ---------- */
+.footer { text-align: left; padding-block: 0; }
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 2rem;
+    padding-block: 2.5rem;
+}
+.footer-title {
+    margin: 0 0 .85rem;
+    font: 700 .8rem var(--font-body);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #fff;
+}
+.footer-about p { margin: 0; max-width: 38ch; line-height: 1.7; }
+.footer-links { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+.footer-links a { color: #cfdcff; text-decoration: none; }
+.footer-links a:hover,
+.footer-links a:focus-visible { color: var(--pencil); text-decoration: underline; }
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: .5rem 1.5rem;
+    flex-wrap: wrap;
+    padding-block: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, .15);
+    font-size: .9rem;
+}
+
+@media (max-width: 800px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-about { grid-column: 1 / -1; }
+}
+@media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; }
+}
