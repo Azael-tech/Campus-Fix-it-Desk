@@ -16,7 +16,25 @@ class MaintenanceReportSeeder extends Seeder
         $staff->name     = 'Maintenance Staff';
         $staff->password = Hash::make('password123');
         $staff->role     = 'staff';
+        $staff->specialty = 'Classroom equipment';
         $staff->save();
+
+        // More demo staff, each one handles a type of problem
+        foreach ([
+            ['mr.reyes@school.test',  'Mario', 'Reyes',  'Electrical'],
+            ['ms.cruz@school.test',   'Lina',  'Cruz',   'Plumbing'],
+            ['mr.garcia@school.test', 'Paolo', 'Garcia', 'Furniture'],
+            ['ms.lopez@school.test',  'Ana',   'Lopez',  'Cleanliness'],
+        ] as [$email, $first, $last, $type]) {
+            $member = User::firstOrNew(['email' => $email]);
+            $member->name       = "$first $last";
+            $member->first_name = $first;
+            $member->last_name  = $last;
+            $member->password   = Hash::make('password123');
+            $member->role       = 'staff';
+            $member->specialty  = $type;
+            $member->save();
+        }
 
         $samples = [
             [

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MaintenanceReport;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -47,6 +48,7 @@ class AuthController extends Controller
         return view('auth.register', [
             'genders'  => self::GENDERS,
             'suffixes' => self::SUFFIXES,
+            'categories' => MaintenanceReport::CATEGORIES,
         ]);
     }
 
@@ -61,6 +63,7 @@ class AuthController extends Controller
             'email'          => ['required', 'email', 'max:150', 'unique:users,email'],
             'password'       => ['required', 'confirmed', Password::min(8)],
             'staff_code'     => ['nullable', 'string', 'max:100'],
+            'specialty'      => ['required_with:staff_code', 'nullable', Rule::in(MaintenanceReport::CATEGORIES)],
         ]);
 
         $isStaff = false;
@@ -71,7 +74,7 @@ class AuthController extends Controller
             if ($expected === '' || ! hash_equals($expected, $data['staff_code'])) {
                 return back()
                     ->withErrors(['staff_code' => 'That staff code is not correct. Leave it empty if you are not maintenance staff.'])
-                    ->onlyInput('last_name', 'first_name', 'middle_initial', 'gender', 'suffix', 'email');
+                    ->onlyInput('last_name', 'first_name', 'middle_initial', 'gender', 'suffix', 'email', 'specialty');
             }
 
             $isStaff = true;
@@ -97,6 +100,7 @@ class AuthController extends Controller
         $user->email          = $data['email'];
         $user->password       = Hash::make($data['password']);
         $user->role           = $isStaff ? 'staff' : 'member';
+        $user->specialty      = $isStaff ? $data['specialty'] : null;
         $user->save();
 
         Auth::login($user);

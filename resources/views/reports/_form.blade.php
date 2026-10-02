@@ -132,13 +132,17 @@
         <legend>Maintenance team update</legend>
         <div class="form-grid">
             <div class="field">
-                <label for="status">Status</label>
-                <select id="status" name="status" required>
-                    @foreach (\App\Models\MaintenanceReport::STATUSES as $key => $label)
-                        <option value="{{ $key }}" @selected(old('status', $r->status) === $key)>{{ $label }}</option>
+                <label for="assigned_user_id">Assigned to</label>
+                <select id="assigned_user_id" name="assigned_user_id">
+                    <option value="">Not assigned yet</option>
+                    @foreach ($staffMembers as $member)
+                        <option value="{{ $member->id }}" @selected((string) old('assigned_user_id', $r->assigned_user_id) === (string) $member->id)>{{ $member->name }}@if ($member->specialty) ({{ $member->specialty }})@endif</option>
                     @endforeach
                 </select>
-                @error('status') <p class="field-error">{{ $message }}</p> @enderror
+                @if (! $r->assigned_user_id && $r->assigned_to)
+                    <p class="hint">Previously typed: {{ $r->assigned_to }}. Choose a staff member to replace it.</p>
+                @endif
+                @error('assigned_user_id') <p class="field-error">{{ $message }}</p> @enderror
             </div>
 
             <div class="field">

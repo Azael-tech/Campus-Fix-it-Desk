@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\ReportInProgress;
 use App\Mail\ReportResolved;
 use App\Models\MaintenanceReport;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -59,11 +60,19 @@ class MaintenanceReportController extends Controller
             ? $request->file('photo')->store('report-photos', 'public')
             : null;
 
+        // Give the report to the staff member who handles this type of problem
+        $staff = $this->findStaffFor($data['category']);
+        $data['assigned_user_id'] = $staff?->id;
+        $data['assigned_to']      = $staff?->name;
+
         $report = MaintenanceReport::create($data);
 
-        return redirect()
-            ->route('reports.show', $report)
-            ->with('success', "Thanks! Your report {$report->reference} was sent to the maintenance team.");
+        $message = "Thanks! Your report {$report->reference} was sent to the maintenance team.";
+        if ($staff) {
+            $message .= " {$staff->name} will handle it.";
+        }
+
+        return redirect()->route('reports.show', $report)->with('success', $message);
     }
 
     /** READ (single) */
@@ -75,7 +84,9 @@ class MaintenanceReportController extends Controller
     /** UPDATE (form): staff only */
     public function edit(MaintenanceReport $report): View
     {
-        return view('reports.edit', compact('report'));
+        $staffMembers = User::where('role', 'staff')->orderBy('name')->get(['id', 'name', 'specialty']);
+
+        return view('reports.edit', compact('report', 'staffMembers'));
     }
 
     /** UPDATE (save): staff only */
@@ -83,6 +94,12 @@ class MaintenanceReportController extends Controller
     {
         $data = $request->validate($this->rules(true));
         $previousStatus = $report->status;
+
+        
+        // "Assigned to" is a staff member chosen from the list
+        $assignee = filled($data['assigned_user_id'] ?? null) ? User::find($data['assigned_user_id']) : null;
+        $data['assigned_user_id'] = $assignee?->id;
+        $data['assigned_to']      = $assignee?->name;
 
         $data['resolved_at'] = $data['status'] === 'resolved'
             ? ($report->resolved_at ?? now())
@@ -223,11 +240,17 @@ class MaintenanceReportController extends Controller
         }
     }
 
-    private function deletePhoto(MaintenanceReport $report): void
+    /** The staff member who handles this type of problem (the one with the fewest open reports). */
+    private function findStaffFor(string $category): ?User
     {
-        if ($report->photo) {
-            Storage::disk('public')->delete($report->photo);
-        }
+        return User::where('role', 'staff')
+            ->where('specialty', $category)
+            ->orderByRaw(
+                '(select count(*) from maintenance_reports where maintenance_reports.assigned_user_id = users.id and maintenance_reports.status <> ?)',
+                ['resolved']
+            )
+            ->orderBy('id')
+            ->first();
     }
 
     private function rules(bool $withStatus = false): array
@@ -246,8 +269,8 @@ class MaintenanceReportController extends Controller
         ];
 
         if ($withStatus) {
-            $rules['status']       = ['required', Rule::in(array_keys(MaintenanceReport::STATUSES))];
-            $rules['assigned_to']  = ['nullable', 'string', 'max:100'];
+            $rules['status'] = ['required', Rule::in(array_keys(MaintenanceReport::STATUSES))];
+            $rules['assigned_user_id'] = ['nullable', Rule::exists('users', 'id')->where('role', 'staff')];
             $rules['remove_photo'] = ['nullable', 'boolean'];
         }
 
